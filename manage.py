@@ -14,7 +14,7 @@ def make_shell_context():
 manager.add_command("runserver", Server(
     use_debugger = True,
     use_reloader = True,
-    host = '0.0.0.0')
+    host = '127.0.0.1')
 )
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
