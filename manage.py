@@ -5,9 +5,12 @@ from app import create_app, db
 # from app.model import User
 
 from flask_script import Manager, Server, Shell
+from flask_cors import *
 
 app = create_app('default')
 manager = Manager(app)
+
+CORS(app, supports_credentials=True)
 
 @manager.shell
 def make_shell_context():
