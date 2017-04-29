@@ -9,8 +9,11 @@ def index():
     # words = Quizs.objects().paginate(page=1, per_page=10)
     words = Quizs.objects.all()
     # for q in words.
-    if words:
-        return jsonify(words)
+    data = jsonify(words)
+    resp = make_response(data)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    if data:
+        return resp
     else:
         return '[]'
 
