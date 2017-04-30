@@ -1,10 +1,24 @@
 from . import api
 from .. import db
 import json
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 from ..mongo_models import *
 
+from functools import wraps
+
+def allow_cross_domain(fun):
+    @wraps(fun)
+    def wrapper_fun(*args, **kwargs):
+        rst = make_response(fun(*args, **kwargs))
+        rst.headers['Access-Control-Allow-Origin'] = '*'
+        rst.headers['Access-Control-Allow-Methods'] = 'PUT,GET,POST,DELETE'
+        allow_headers = "Referer,Accept,Origin,User-Agent"
+        rst.headers['Access-Control-Allow-Headers'] = allow_headers
+        return rst
+    return wrapper_fun
+
 @api.route('/get_quiz_list', methods=['GET', 'POST'])
+@allow_cross_domain
 def index():
     # words = Quiz.objects.all()
     # data = jsonify(words)
@@ -27,6 +41,7 @@ def index():
         return '[]'
 
 @api.route('/get_last_quiz', methods=['GET', 'POST'])
+@allow_cross_domain
 def get_word_info():
     try:
         quiz_ids = Quiz.objects().order_by('quiz_id')
@@ -36,6 +51,7 @@ def get_word_info():
         return "[]"
 
 @api.route('/submit_quiz', methods=['POST'])
+@allow_cross_domain
 def submit_quiz():
     data = request.get_json()
     user_id = data["user_id"]
